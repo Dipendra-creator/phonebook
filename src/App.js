@@ -1,14 +1,27 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import Person from './Components/Person'
 
-const App = (props) => {
-    const [persons, setPersons] = useState(props.persons)
+const App = () => {
+    const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNum, setNewNum] = useState('')
     const [showAll,  setShowAll] = useState(true)
     const [filterName, setFilterName] = useState('')
     let personsNames = persons.map(person => person.name)
     const check_name = (personsNames.indexOf(newName) in personsNames)
+
+    const hook = () => {
+        console.log('effect')
+        axios
+            .get('http://localhost:3001/persons')
+            .then(response => {
+                console.log('promise fulfilled')
+                setPersons(response.data)
+            })
+    }
+    useEffect(hook, [])
+    console.log('render', persons.length, 'notes')
 
     const personToShow = showAll
         ? persons
@@ -47,8 +60,21 @@ const App = (props) => {
         setFilterName(event.target.value)
     }
 
-    function Form() {
+    function Persons() {
         return (
+            personToShow.map(person =>
+                <Person key={person.id} person={person} />
+            )
+        )
+    }
+
+    return (
+        <div>
+            <h2>Phonebook</h2>
+            <div onFocus={() => setShowAll(!showAll)} onBlur={() => setShowAll(!showAll)}>
+                filter shown with: <input value={filterName} onChange={handleFilterChange} />
+            </div>
+            <h2>add a new</h2>
             <form onSubmit={addPerson}>
                 <div>
                     name: <input
@@ -66,25 +92,6 @@ const App = (props) => {
                     <button type="submit">add</button>
                 </div>
             </form>
-        )
-    }
-
-    function Persons() {
-        return (
-            personToShow.map(person =>
-                <Person key={person.id} person={person} />
-            )
-        )
-    }
-
-    return (
-        <div>
-            <h2>Phonebook</h2>
-            <div onFocus={() => setShowAll(!showAll)} onBlur={() => setShowAll(!showAll)}>
-                filter shown with: <input value={filterName} onChange={handleFilterChange} />
-            </div>
-            <h2>add a new</h2>
-            <Form />
             <h2>Numbers</h2>
             <Persons />
         </div>
