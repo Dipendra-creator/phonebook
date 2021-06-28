@@ -1,6 +1,7 @@
+import Person from './Components/Person'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import Person from './Components/Person'
+const baseUrl = 'http://localhost:3001/api/persons'
 
 const App = () => {
     const [persons, setPersons] = useState([])
@@ -14,7 +15,7 @@ const App = () => {
     const hook = () => {
         console.log('effect')
         axios
-            .get('http://localhost:3001/persons')
+            .get(baseUrl)
             .then(response => {
                 console.log('promise fulfilled')
                 setPersons(response.data)
