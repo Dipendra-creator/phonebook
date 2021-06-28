@@ -1,7 +1,7 @@
 import Person from './Components/Person'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001/api/persons'
+const baseUrl = 'https://react-phonebook-demo.herokuapp.com/api/persons'
 
 const App = () => {
     const [persons, setPersons] = useState([])
